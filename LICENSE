@@ -1,6 +1,8 @@
 MIT License
 
-Copyright (c) 2026 GoGoCoding
+Copyright (c) 2025 주식회사 모비딕컴퍼니 (Mobidic Company Inc.)
+                   대표 강희성 (Kang Heesung) · 개발 박성모 (Park Sungmo)
+                   https://aifighter.io  ·  https://mobidicsaju.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +21,15 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+NOTE: This MIT license applies only to the scripts and documentation in this
+repository. Model weights (LG EXAONE, SKT A.X, Upstage Solar) are subject to
+their original licenses from each provider:
+
+- LG EXAONE 4.0     : EXAONE AI Model License
+- SKT A.X 4.0 Light : Apache 2.0
+- Upstage Solar Pro : MIT (preview)
+
+See https://github.com/GoGoComputer/korea-sovereign-ai for details.

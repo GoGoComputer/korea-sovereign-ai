@@ -8,9 +8,20 @@
 [![Ollama](https://img.shields.io/badge/Ollama-supported-green)](https://ollama.com)
 [![MLX](https://img.shields.io/badge/MLX-4bit-blue)](https://github.com/ml-explore/mlx)
 
-🔗 **GitHub**: <https://github.com/GoGoComputer/korea-sovereign-ai>
-👤 **Maintainer**: 박성모 (Park Sungmo) — [@GoGoComputer](https://github.com/GoGoComputer)
-🏢 **Affiliation**: [주식회사 모비딕컴퍼니](https://mobidicsaju.com) (사주팔자AI)
+<table>
+<tr>
+<td>🔗</td><td><b>GitHub</b></td><td><a href="https://github.com/GoGoComputer/korea-sovereign-ai">github.com/GoGoComputer/korea-sovereign-ai</a></td>
+</tr>
+<tr>
+<td>👤</td><td><b>대표 (Lead)</b></td><td>강희성 (Kang Heesung) · <a href="mailto:mobidicmcn@gmail.com">mobidicmcn@gmail.com</a> · 1600-7542</td>
+</tr>
+<tr>
+<td>🛠️</td><td><b>개발 (Maintainer)</b></td><td>박성모 (Park Sungmo)</td>
+</tr>
+<tr>
+<td>🏢</td><td><b>소속</b></td><td><a href="https://aifighter.io">주식회사 모비딕컴퍼니 — AI Fighter</a> · <a href="https://mobidicsaju.com">사주팔자AI</a></td>
+</tr>
+</table>
 
 > 🆕 **처음 보는 분 / 맥북 없는 분**도 → **[docs/0-소개.md](docs/0-소개.md)** 부터 읽어보세요.
 > "한국 소버린 AI가 뭔지", "왜 만들었는지" 부터 친절하게 설명합니다.
@@ -85,13 +96,17 @@ cd ~/DEV/llmDev/korea-ai
 
 ---
 
-## 👤 만든 사람
+## � 만든 사람
 
-**박성모 (Park Sungmo)** · GitHub [@GoGoComputer](https://github.com/GoGoComputer)
+| 역할 | 이름 | 연락처 |
+|---|---|---|
+| 🧭 **대표 (Lead)** | **강희성 (Kang Heesung)** | <mobidicmcn@gmail.com> · 1600-7542 |
+| 🛠️ **개발 (Maintainer)** | **박성모 (Park Sungmo)** | GitHub [@GoGoComputer](https://github.com/GoGoComputer) |
 
-**소속**: [주식회사 모비딕컴퍼니](https://mobidicsaju.com) — 사주팔자AI (AI 기반 운세 분석 서비스)
+**소속**: [주식회사 모비딕컴퍼니 — AI Fighter](https://aifighter.io)
+· 서비스: [사주팔자AI](https://mobidicsaju.com) (AI 기반 운세 분석)
 
-상세 정보 / 회사 등록 정보 / 감사 인사: [AUTHORS.md](AUTHORS.md)
+상세 회사 등록 정보 / 감사 인사: **[AUTHORS.md](AUTHORS.md)**
 
 ## 📜 라이선스
 
