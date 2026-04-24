@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+#  ai-clean — 디스크 캐시 정리 (모델 파일은 보존, 다운로드 캐시만 삭제)
+# ─────────────────────────────────────────────────────────────────────────────
+#  하는 일 (안전):
+#   • Hugging Face 다운로드 임시/락 파일 정리
+#   • mlx_lm 변환 시 생긴 .incomplete / .lock 파일 삭제
+#   • 디스크 절약량 미리 보여주고 확인 받음
+#
+#  보존 (절대 안 지움):
+#   • ~/models/ 의 정상 모델 (exaone-4.0-1.2b-4bit-mlx, ax-4.0-light-4bit-mlx,
+#     solar-pro/*.gguf 등)
+#   • Ollama 의 등록된 모델 (~/.ollama/models)
+#   • HF 캐시의 정상 snapshot
+#
+#  Usage:
+#    ai-clean              # 정리 대상 보여주고 확인
+#    ai-clean --yes        # 확인 없이 바로 정리
+#    ai-clean --hf-cache   # HF 캐시 전체 삭제 (모델은 ~/models/ 에 이미 복사됨)
+#    ai-clean --dry-run    # 보기만 함
+# ─────────────────────────────────────────────────────────────────────────────
+set -e
+
+YES=0
+HF_CACHE=0
+DRY=0
+for arg in "$@"; do
+  case "$arg" in
+    --yes|-y)    YES=1 ;;
+    --hf-cache)  HF_CACHE=1 ;;
+    --dry-run|-n) DRY=1 ;;
+    --help|-h) sed -n '2,22p' "$0"; exit 0 ;;
+  esac
+done
+
+bytes_human() {
+  awk -v b="$1" 'BEGIN{
+    s="BKMGT"; i=1; while(b>=1024 && i<5){b/=1024; i++}
+    printf "%.1f%s", b, substr(s,i,1)
+  }'
+}
+
+dir_bytes() {
+  if [[ -e "$1" ]]; then du -sk "$1" 2>/dev/null | awk '{print $1*1024}'; else echo 0; fi
+}
+
+echo "🧹 ai-clean — 디스크 정리 (모델 파일은 보존)"
+echo "─────────────────────────────────────────────"
+
+declare -a TARGETS=()
+TOTAL=0
+
+# 1) HF 다운로드 임시 파일
+while IFS= read -r f; do
+  [[ -e "$f" ]] || continue
+  sz=$(stat -f%z "$f" 2>/dev/null || echo 0)
+  TARGETS+=("$f|$sz|HF 다운로드 임시")
+  TOTAL=$((TOTAL + sz))
+done < <(find "$HOME/models" -name "*.incomplete" -o -name "*.lock" 2>/dev/null)
+
+# 2) HF 캐시 잠금/임시
+while IFS= read -r f; do
+  [[ -e "$f" ]] || continue
+  sz=$(stat -f%z "$f" 2>/dev/null || echo 0)
+  TARGETS+=("$f|$sz|HF 캐시 임시")
+  TOTAL=$((TOTAL + sz))
+done < <(find "$HOME/.cache/huggingface" -name "*.incomplete" -o -name "*.lock" 2>/dev/null)
+
+# 3) HF 캐시 전체 (옵션)
+if [[ $HF_CACHE -eq 1 ]]; then
+  HF_DIR="$HOME/.cache/huggingface/hub"
+  if [[ -d "$HF_DIR" ]]; then
+    sz=$(dir_bytes "$HF_DIR")
+    TARGETS+=("$HF_DIR|$sz|HF 캐시 (전체)")
+    TOTAL=$((TOTAL + sz))
+  fi
+fi
+
+if [[ ${#TARGETS[@]} -eq 0 ]]; then
+  echo "  ✓ 정리할 항목 없음 (이미 깨끗함)"
+  exit 0
+fi
+
+printf "%-8s  %-15s  %s\n" "크기" "종류" "경로"
+echo "─────────────────────────────────────────────"
+for t in "${TARGETS[@]}"; do
+  IFS='|' read -r path sz kind <<<"$t"
+  printf "%-8s  %-15s  %s\n" "$(bytes_human "$sz")" "$kind" "$path"
+done
+echo "─────────────────────────────────────────────"
+echo "총 절약 가능: $(bytes_human "$TOTAL")"
+
+if [[ $DRY -eq 1 ]]; then
+  echo "(--dry-run: 실제로 지우지 않음)"
+  exit 0
+fi
+
+if [[ $YES -ne 1 ]]; then
+  read -rp "정말 삭제할까요? [y/N] " ans
+  [[ "$ans" =~ ^[yY]$ ]] || { echo "취소됨"; exit 0; }
+fi
+
+for t in "${TARGETS[@]}"; do
+  IFS='|' read -r path sz kind <<<"$t"
+  rm -rf "$path"
+done
+echo "✅ 정리 완료 — $(bytes_human "$TOTAL") 확보"

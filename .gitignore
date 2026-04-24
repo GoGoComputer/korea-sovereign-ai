@@ -1,0 +1,43 @@
+# 모델 파일 (절대 커밋 금지 — GB 단위)
+*.gguf
+*.safetensors
+*.bin
+*.mlx
+models/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.Python
+
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# 에디터 / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 로그 / 임시
+*.log
+*.tmp
+*.lock
+*.incomplete
+.korea-ai-maint.log
+
+# 환경변수 / 비밀
+.env
+.env.local
+*.pem
+*.key
+
+# HuggingFace 캐시 (사용자 홈에 있지만 혹시 모를 심볼릭 링크 대비)
+.cache/
+huggingface_cache/

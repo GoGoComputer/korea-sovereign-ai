@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+#  Solar Pro Preview 22B  (Ollama / GGUF Q4_K_M)
+# ─────────────────────────────────────────────────────────────────────────────
+#  • 개발사   : Upstage (업스테이지, 한국)
+#  • 풀네임   : Solar Pro Preview Instruct 22B
+#  • 라이선스 : MIT (가장 개방적)
+#  • 파라미터 : 22B dense — "Depth Up-Scaling(DUS)" 기법으로 효율적 확장
+#  • 특징
+#     - 70B 급 모델 수준의 reasoning 성능을 22B 로 달성 (Upstage 자체 벤치)
+#     - 한국 스타트업이 만든 글로벌 경쟁력 보유 모델
+#     - 영어 / 한국어 모두 우수, 코드/수학 균형
+#     - "Preview" — 정식 Solar Pro 의 사전 공개 버전 (정식 모델은 109B)
+#  • 메모리   : ~13 GB (Q4_K_M GGUF)
+#  • ⚠ 24GB RAM 환경에서는 다른 무거운 앱(Chrome/Slack/VSCode) 닫고 실행 권장
+#  • 백엔드   : Ollama (llama.cpp)
+#  • 등록명   : solar-pro  (ollama list 로 확인)
+# ─────────────────────────────────────────────────────────────────────────────
+#  Usage:
+#    solar              # 대화형 (종료: /bye)
+#    solar "질문"        # 단발성
+#    solar --setup      # 모델이 없으면 자동 다운로드 + Ollama 등록
+# ─────────────────────────────────────────────────────────────────────────────
+set -e
+export PATH="$HOME/Library/Python/3.9/bin:$PATH"
+
+MODEL="solar-pro"
+GGUF_DIR="$HOME/models/solar-pro"
+GGUF_FILE="$GGUF_DIR/solar-pro-preview-instruct.Q4_K_M.gguf"
+HF_REPO="MaziyarPanahi/solar-pro-preview-instruct-GGUF"
+HF_FILE="solar-pro-preview-instruct.Q4_K_M.gguf"
+
+setup() {
+  echo "▶ Solar Pro 22B 셋업 시작 (~13GB 다운로드, 시간 소요)"
+  if [[ ! -f "$GGUF_FILE" ]]; then
+    if ! command -v huggingface-cli >/dev/null; then
+      echo "❌ huggingface-cli 가 없습니다. ~/.zshrc 의 PATH 설정 확인하세요." >&2
+      exit 1
+    fi
+    mkdir -p "$GGUF_DIR"
+    huggingface-cli download "$HF_REPO" --include "$HF_FILE" --local-dir "$GGUF_DIR"
+  else
+    echo "✓ GGUF 이미 존재: $GGUF_FILE"
+  fi
+
+  if ! ollama list 2>/dev/null | awk '{print $1}' | grep -q "^${MODEL}\(:latest\)\?$"; then
+    echo "▶ Ollama 에 등록: $MODEL"
+    local mf=$(mktemp -t solar-modelfile.XXXX)
+    echo "FROM $GGUF_FILE" > "$mf"
+    ollama create "$MODEL" -f "$mf"
+    rm -f "$mf"
+  else
+    echo "✓ Ollama 모델 이미 등록됨: $MODEL"
+  fi
+  echo "✅ 셋업 완료 — 이제 'solar' 로 바로 실행 가능"
+}
+
+ensure_ready() {
+  if ! ollama list 2>/dev/null | awk '{print $1}' | grep -q "^${MODEL}\(:latest\)\?$"; then
+    cat >&2 <<EOF
+❌ Solar Pro 모델이 Ollama 에 등록되어 있지 않습니다.
+
+자동 셋업:
+  solar --setup
+
+수동:
+  huggingface-cli download $HF_REPO --include "$HF_FILE" --local-dir $GGUF_DIR
+  echo "FROM $GGUF_FILE" > /tmp/Modelfile
+  ollama create $MODEL -f /tmp/Modelfile
+EOF
+    exit 1
+  fi
+}
+
+case "${1:-}" in
+  --setup|setup) setup; exit 0 ;;
+esac
+
+ensure_ready
+
+if [[ $# -gt 0 ]]; then
+  ollama run "$MODEL" "$*"
+else
+  echo "▶ Solar Pro 22B (Upstage, MIT) — 종료: /bye"
+  echo "  ⚠ 13GB 모델 — 메모리 빡빡할 수 있음. 무거운 앱은 닫고 사용하세요."
+  ollama run "$MODEL"
+fi

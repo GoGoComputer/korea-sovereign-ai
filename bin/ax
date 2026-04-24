@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+#  SKT A.X 4.0 Light  (MLX 4bit)
+# ─────────────────────────────────────────────────────────────────────────────
+#  • 개발사   : SK텔레콤 AI 모델 연구소
+#  • 풀네임   : "A.X 4.0 Light" (Adaptive eXperience 4.0, 경량 변종)
+#  • 학습 인프라: SKT 자체 슈퍼컴퓨터 "TITAN" (NVIDIA H100 1,000+ GPU)
+#  • 라이선스 : Apache 2.0 (상업 이용 가능 — 한국 소버린 모델 중 가장 개방적)
+#  • 컨텍스트 : 32K (네이티브) / 131K (YaRN 확장)
+#  • 특징
+#     - 한국어 토크나이저 자체 개발 → GPT-4o 대비 한국어 토큰 33% 절약
+#       (= 같은 비용으로 더 긴 한국어 처리 + 응답 속도 향상)
+#     - KMMLU 69.2점 (한국어 종합 벤치, 동급 모델 중 최상위권)
+#     - SKT 통신·고객 서비스 데이터로 도메인 튜닝 → 실생활 한국어 강세
+#     - 한국 정부 "독자 AI 파운데이션 모델(독파모)" 사업 핵심 후보
+#  • 메모리   : ~4.5 GB (4bit MLX)   원본 BF16 14 GB → 4bit 4.5 GB
+#  • 백엔드   : mlx-lm (Apple Silicon)
+#  • 모델 경로: ~/models/ax-4.0-light-4bit-mlx
+#               (skt/A.X-4.0-Light 를 mlx_lm convert -q 로 로컬 변환)
+# ─────────────────────────────────────────────────────────────────────────────
+#  Usage:
+#    ax              # 대화형 (종료: Ctrl+D)
+#    ax "질문"        # 단발성
+# ─────────────────────────────────────────────────────────────────────────────
+set -e
+export PATH="$HOME/Library/Python/3.9/bin:$PATH"
+MODEL="$HOME/models/ax-4.0-light-4bit-mlx"
+
+if [[ ! -d "$MODEL" || ! -f "$MODEL/config.json" ]]; then
+  cat >&2 <<EOF
+❌ A.X 4.0 Light MLX 모델이 아직 없습니다: $MODEL
+
+변환 명령 (BF16 14GB 다운로드 후 4bit 4.5GB 로 양자화, 시간 소요):
+  python3 -m mlx_lm convert \\
+    --hf-path skt/A.X-4.0-Light \\
+    --mlx-path ~/models/ax-4.0-light-4bit-mlx \\
+    -q
+EOF
+  exit 1
+fi
+
+if [[ $# -gt 0 ]]; then
+  python3 -m mlx_lm generate --model "$MODEL" --prompt "$*" --max-tokens 512
+else
+  echo "▶ SKT A.X 4.0 Light (MLX 4bit, 한국어 강세) — 종료: Ctrl+D"
+  python3 -m mlx_lm chat --model "$MODEL" --max-tokens 1024
+fi

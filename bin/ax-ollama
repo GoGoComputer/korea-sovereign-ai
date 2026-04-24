@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+#  ax-ollama — SKT A.X 4.0 Light (Ollama / GGUF Q4_K_M)
+# ─────────────────────────────────────────────────────────────────────────────
+#  • 동일 모델의 Ollama(GGUF) 변종. MLX 기다리기 싫을 때 빠르게 사용 가능.
+#  • GGUF 출처: mykor/A.X-4.0-Light-gguf  (커뮤니티 변환, Apache 2.0 유지)
+#  • 메모리   : ~4.5 GB (Q4_K_M)
+#  • Ollama 등록명: ax-light
+#  • 첫 실행 전: ax-ollama --setup  (~4.5GB GGUF 다운로드 + 등록)
+# ─────────────────────────────────────────────────────────────────────────────
+#  Usage:
+#    ax-ollama --setup     # 최초 1회
+#    ax-ollama             # 대화형 (종료: /bye)
+#    ax-ollama "질문"       # 단발성
+# ─────────────────────────────────────────────────────────────────────────────
+set -e
+export PATH="$HOME/Library/Python/3.9/bin:$PATH"
+
+MODEL="ax-light"
+GGUF_DIR="$HOME/models/ax-light-gguf"
+GGUF_FILE="$GGUF_DIR/A.X-4.0-Light-Q4_K_M.gguf"
+HF_REPO="mykor/A.X-4.0-Light-gguf"
+HF_FILE="A.X-4.0-Light-Q4_K_M.gguf"
+
+setup() {
+  echo "▶ SKT A.X 4.0 Light (Ollama) 셋업 — ~4.5GB"
+  if [[ ! -f "$GGUF_FILE" ]]; then
+    mkdir -p "$GGUF_DIR"
+    huggingface-cli download "$HF_REPO" --include "$HF_FILE" --local-dir "$GGUF_DIR"
+  fi
+  if ! ollama list 2>/dev/null | awk '{print $1}' | grep -q "^${MODEL}\(:.*\)\?$"; then
+    mf=$(mktemp -t ax-modelfile.XXXX)
+    cat > "$mf" <<EOF
+FROM $GGUF_FILE
+TEMPLATE """{{ if .System }}<|system|>
+{{ .System }}<|endoftext|>
+{{ end }}{{ if .Prompt }}<|user|>
+{{ .Prompt }}<|endoftext|>
+{{ end }}<|assistant|>
+{{ .Response }}<|endoftext|>"""
+PARAMETER stop "<|endoftext|>"
+PARAMETER stop "<|user|>"
+EOF
+    ollama create "$MODEL" -f "$mf"
+    rm -f "$mf"
+  fi
+  echo "✅ 완료 — 'ax-ollama' 로 실행"
+}
+
+case "${1:-}" in
+  --setup|setup) setup; exit 0 ;;
+esac
+
+if ! ollama list 2>/dev/null | awk '{print $1}' | grep -q "^${MODEL}"; then
+  echo "❌ ax-light 모델 미등록. 먼저: ax-ollama --setup" >&2
+  exit 1
+fi
+
+if [[ $# -gt 0 ]]; then
+  ollama run "$MODEL" "$*"
+else
+  echo "▶ SKT A.X 4.0 Light (Ollama, ax-light) — 종료: /bye"
+  ollama run "$MODEL"
+fi

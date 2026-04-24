@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+#  ai-status — 한국 소버린 AI 모델 설치 상태 한눈에 보기
+# ─────────────────────────────────────────────────────────────────────────────
+set -e
+
+mark() { case "$1" in ok) printf "\033[32m✓\033[0m";; ko) printf "\033[31m✗\033[0m";; w) printf "\033[33m⚠\033[0m";; esac; }
+
+MODELS="$HOME/models"
+
+echo "🇰🇷 한국 소버린 AI 상태 (Mac M5 Pro 24GB)"
+echo "────────────────────────────────────────────"
+
+# Ollama 서버
+if curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
+  printf " %s ollama serve\n" "$(mark ok)"
+else
+  printf " %s ollama serve   (Ollama.app 실행 또는 'ollama serve &')\n" "$(mark ko)"
+fi
+
+# Ollama 모델 체크
+check_ollama() {
+  local cmd="$1" tag="$2" desc="$3"
+  if ollama list 2>/dev/null | awk '{print $1}' | grep -q "^${tag}\(:.*\)\?$"; then
+    printf " %s %-12s  %s\n" "$(mark ok)" "$cmd" "$desc"
+  else
+    printf " %s %-12s  %s   (없음 → install.sh)\n" "$(mark ko)" "$cmd" "$desc"
+  fi
+}
+
+# MLX 모델 체크
+check_mlx() {
+  local cmd="$1" dir="$2" desc="$3"
+  if [[ -f "$dir/config.json" ]]; then
+    local sz=$(du -sh "$dir" 2>/dev/null | awk '{print $1}')
+    printf " %s %-12s  %s   (%s)\n" "$(mark ok)" "$cmd" "$desc" "$sz"
+  else
+    printf " %s %-12s  %s   (없음 → install.sh)\n" "$(mark ko)" "$cmd" "$desc"
+  fi
+}
+
+echo
+echo "[모델]"
+check_ollama "exaone"     "hf.co/LGAI-EXAONE/EXAONE-4.0-1.2B-GGUF" "LG EXAONE 1.2B (Ollama)"
+check_mlx    "exaone-mlx" "$MODELS/exaone-4.0-1.2b-4bit-mlx"       "LG EXAONE 1.2B (MLX)"
+check_mlx    "ax"         "$MODELS/ax-4.0-light-4bit-mlx"          "SKT A.X 4.0 Light (MLX)"
+check_ollama "solar"      "solar-pro"                              "Upstage Solar Pro 22B"
+
+# 현재 메모리에 로드된 것
+echo
+echo "[지금 메모리에 로드된 Ollama 모델]"
+loaded=$(ollama ps 2>/dev/null | awk 'NR>1 {print "  " $0}')
+[[ -z "$loaded" ]] && echo "  (없음)" || echo "$loaded"
+
+echo
+echo "💡 메뉴: $(dirname "$(cd "$(dirname "$0")" && pwd)")/launcher.sh"

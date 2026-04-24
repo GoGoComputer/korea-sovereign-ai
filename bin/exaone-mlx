@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+#  EXAONE 4.0 1.2B  (MLX 4bit, Apple Silicon 네이티브)
+# ─────────────────────────────────────────────────────────────────────────────
+#  • 개발사   : LG AI연구원 (모델), Apple (MLX 프레임워크)
+#  • 백엔드   : mlx-lm (Apple Silicon GPU/Neural Engine 가속)
+#  • 양자화   : 4bit (group-wise quant)
+#  • 메모리   : ~0.7 GB peak
+#  • 속도     : 282 tok/s (M5 Pro 24GB 실측) ← 본 셋업 최고 속도
+#  • 특징
+#     - 위 exaone 명령과 같은 모델이지만 Ollama(llama.cpp) 대신
+#       Apple MLX 런타임으로 실행 → Metal/ANE 직접 활용
+#     - GGUF 대비 메모리 효율·throughput 모두 우수
+#     - 단발 generate 와 대화형 chat 두 모드 지원 (mlx-lm 0.29+)
+#  • 모델 경로: ~/models/exaone-4.0-1.2b-4bit-mlx
+#               (LGAI-EXAONE/EXAONE-4.0-1.2B 를 mlx_lm convert -q 로 변환)
+# ─────────────────────────────────────────────────────────────────────────────
+#  Usage:
+#    exaone-mlx              # 대화형 chat (종료: Ctrl+D)
+#    exaone-mlx "질문"        # 단발성 generate
+# ─────────────────────────────────────────────────────────────────────────────
+set -e
+export PATH="$HOME/Library/Python/3.9/bin:$PATH"
+MODEL="$HOME/models/exaone-4.0-1.2b-4bit-mlx"
+
+if [[ ! -d "$MODEL" ]]; then
+  echo "❌ 모델이 없습니다: $MODEL" >&2
+  exit 1
+fi
+
+if [[ $# -gt 0 ]]; then
+  python3 -m mlx_lm generate --model "$MODEL" --prompt "$*" --max-tokens 512
+else
+  echo "▶ EXAONE 4.0 1.2B (MLX 4bit, 282 tok/s) — 종료: Ctrl+D"
+  python3 -m mlx_lm chat --model "$MODEL" --max-tokens 1024
+fi
