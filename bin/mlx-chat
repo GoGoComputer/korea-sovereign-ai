@@ -1,0 +1,119 @@
+#!/usr/bin/env python3
+"""Clean Ollama-like terminal chat for MLX models (mlx_lm >= 0.29)."""
+import sys
+import warnings
+warnings.filterwarnings("ignore")
+
+# Strings that indicate end-of-turn — stop generation even if not EOS token
+STOP_STRINGS = ["<|im_end|>", "<|endoftext|>", "</s>", "<|eot_id|>"]
+
+
+def run_chat(model_path: str, label: str, max_tokens: int = 1024):
+    try:
+        from mlx_lm import load, stream_generate
+    except ImportError:
+        sys.exit("❌ mlx_lm 미설치 — pip3 install mlx-lm")
+
+    print(f"▶ {label} 로딩 중...", end="\r", flush=True)
+    model, tokenizer = load(model_path)
+    print(f"\033[K▶ {label}  |  종료: /bye 또는 Ctrl+D  |  초기화: /reset\n")
+
+    messages = [
+        {
+            "role": "system",
+            "content": "You are a helpful AI assistant. 한국어로 질문하면 한국어로 답변하세요.",
+        }
+    ]
+
+    # Number of chars to keep buffered to catch stop strings that span chunks
+    KEEP = max(len(s) for s in STOP_STRINGS)
+
+    while True:
+        try:
+            user_input = input(">>> ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\n안녕히 가세요!")
+            return
+
+        if not user_input:
+            continue
+        if user_input in ("/bye", "/exit", "/quit", "q"):
+            print("안녕히 가세요!")
+            return
+        if user_input in ("/reset", "r"):
+            messages = messages[:1]
+            print("[대화 초기화됨]\n")
+            continue
+        if user_input in ("/help", "h"):
+            print("  /reset — 대화 초기화   /bye — 종료\n")
+            continue
+
+        messages.append({"role": "user", "content": user_input})
+
+        # Build prompt via chat template if available
+        if hasattr(tokenizer, "apply_chat_template") and getattr(
+            tokenizer, "chat_template", None
+        ):
+            prompt = tokenizer.apply_chat_template(
+                messages, add_generation_prompt=True, tokenize=False
+            )
+        else:
+            prompt = user_input
+
+        # Stream response, filtering stop strings
+        response = ""
+        buf = ""
+        hit_stop = False
+
+        for chunk in stream_generate(
+            model, tokenizer, prompt=prompt, max_tokens=max_tokens
+        ):
+            buf += chunk.text
+
+            # Check for any stop string in the buffer
+            stop_pos = len(buf)
+            for s in STOP_STRINGS:
+                idx = buf.find(s)
+                if idx != -1 and idx < stop_pos:
+                    stop_pos = idx
+
+            if stop_pos < len(buf):
+                # Stop string found — print text before it, then stop
+                to_print = buf[:stop_pos]
+                if to_print:
+                    print(to_print, end="", flush=True)
+                    response += to_print
+                buf = ""
+                hit_stop = True
+                break
+
+            # Flush safe prefix, keep KEEP chars buffered for cross-chunk matching
+            if len(buf) > KEEP:
+                safe = buf[:-KEEP]
+                print(safe, end="", flush=True)
+                response += safe
+                buf = buf[-KEEP:]
+
+            if chunk.finish_reason is not None:
+                break
+
+        # Flush remaining buffer (strip any trailing stop strings)
+        if not hit_stop and buf:
+            for s in STOP_STRINGS:
+                idx = buf.find(s)
+                if idx != -1:
+                    buf = buf[:idx]
+                    break
+            if buf:
+                print(buf, end="", flush=True)
+                response += buf
+
+        print()  # newline after response
+        messages.append({"role": "assistant", "content": response.strip()})
+
+
+if __name__ == "__main__":
+    args = sys.argv[1:]
+    if len(args) < 2:
+        sys.exit(f"Usage: {sys.argv[0]} <model_path> <label> [max_tokens]")
+    run_chat(args[0], args[1], int(args[2]) if len(args) > 2 else 1024)

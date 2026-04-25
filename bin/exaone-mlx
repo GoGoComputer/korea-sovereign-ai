@@ -28,9 +28,10 @@ if [[ ! -d "$MODEL" ]]; then
   exit 1
 fi
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 if [[ $# -gt 0 ]]; then
   python3 -m mlx_lm generate --model "$MODEL" --prompt "$*" --max-tokens 512
 else
-  echo "▶ EXAONE 4.0 1.2B (MLX 4bit, 282 tok/s) — 종료: Ctrl+D"
-  python3 -m mlx_lm chat --model "$MODEL" --max-tokens 1024
+  python3 "$SCRIPT_DIR/mlx-chat" "$MODEL" "EXAONE 4.0 1.2B (MLX 4bit, 282 tok/s)" 1024
 fi
