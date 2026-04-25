@@ -73,7 +73,9 @@ korea-ai/
 │   ├── PULL_REQUEST_TEMPLATE.md
 │   └── ISSUE_TEMPLATE/  (bug / feature / question)
 ├── docs/               (documentation — Korean originals + English mirror)
-│   ├── 00-기초.md / en/00-basics.md   🕰️ Absolute basics (what's a local LLM)
+│   ├── 00-기초.md / en/00-basics.md         🕰️ Absolute basics
+│   ├── A1-개념사전.md / en/A1-glossary.md   📖 Concepts dictionary
+│   ├── A2-수동설치.md / en/A2-manual-install.md  🔧 Fully manual install
 │   ├── 0-소개.md / en/0-intro.md
 │   ├── 1-설명.md / en/1-overview.md
 │   ├── 2-설치.md / en/2-install.md
@@ -114,6 +116,8 @@ Already installed:
 | Audience | Start here | Contents |
 |---|---|---|
 | **🕰️ Absolute beginners (what's a local LLM?)** | [docs/en/00-basics.md](docs/en/00-basics.md) | LLM / token / quantization / Ollama / MLX from zero |
+| **📖 Glossary / concepts** | [docs/en/A1-glossary.md](docs/en/A1-glossary.md) | Terminal / folder / Hugging Face / Ollama / MLX — "what is that?" reference |
+| **🔧 Fully manual install** | [docs/en/A2-manual-install.md](docs/en/A2-manual-install.md) | Do everything `install.sh` automates, by hand |
 | **🆕 Newcomers / no Mac** | [docs/en/0-intro.md](docs/en/0-intro.md) | What this is, why we built it, sovereign AI concept |
 | **First-time users** | [docs/en/1-overview.md](docs/en/1-overview.md) | What Korean Sovereign AI is, which model to pick |
 | **Installers** | [docs/en/2-install.md](docs/en/2-install.md) | `install.sh` usage, manual install, troubleshooting |
