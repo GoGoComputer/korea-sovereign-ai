@@ -2,6 +2,8 @@
 
 A conceptual introduction for first-time visitors to this repository, including those who don't own a Mac and just want to understand "what is this project?"
 
+> 🕰️ **Need the absolute basics first ("what *is* a local LLM?")?** → read [00-basics.md](00-basics.md) before this.
+
 **🌐 Language**: [한국어](../0-소개.md) · **English (current)**
 
 ---

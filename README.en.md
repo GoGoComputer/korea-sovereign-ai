@@ -27,6 +27,8 @@
 
 > 🆕 **New here / no Mac yet?** Start with **[docs/0-소개.md](docs/0-소개.md)** (Korean concept guide).
 > It explains "what Korean Sovereign AI is" and "why we built this" from scratch.
+>
+> 🕰️ **"What even *is* a local LLM?"** → **[docs/en/00-basics.md](docs/en/00-basics.md)** (every term — token, quantization, Ollama, MLX — explained from zero).
 
 ---
 
@@ -66,6 +68,7 @@ korea-ai/
 ├── AUTHORS.md          Authors / company info
 ├── LICENSE             MIT
 ├── docs/               (documentation — Korean originals + English mirror)
+│   ├── 00-기초.md / en/00-basics.md   🕰️ Absolute basics (what's a local LLM)
 │   ├── 0-소개.md / en/0-intro.md
 │   ├── 1-설명.md / en/1-overview.md
 │   ├── 2-설치.md / en/2-install.md
@@ -105,6 +108,7 @@ Already installed:
 
 | Audience | Start here | Contents |
 |---|---|---|
+| **🕰️ Absolute beginners (what's a local LLM?)** | [docs/en/00-basics.md](docs/en/00-basics.md) | LLM / token / quantization / Ollama / MLX from zero |
 | **🆕 Newcomers / no Mac** | [docs/en/0-intro.md](docs/en/0-intro.md) | What this is, why we built it, sovereign AI concept |
 | **First-time users** | [docs/en/1-overview.md](docs/en/1-overview.md) | What Korean Sovereign AI is, which model to pick |
 | **Installers** | [docs/en/2-install.md](docs/en/2-install.md) | `install.sh` usage, manual install, troubleshooting |

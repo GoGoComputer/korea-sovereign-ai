@@ -27,6 +27,8 @@
 
 > 🆕 **처음 보는 분 / 맥북 없는 분**도 → **[docs/0-소개.md](docs/0-소개.md)** 부터 읽어보세요.
 > "한국 소버린 AI가 뭔지", "왜 만들었는지" 부터 친절하게 설명합니다.
+>
+> 🕰️ **"로컬 LLM이 도대체 뭔가요?"** 수준이라면 → **[docs/00-기초.md](docs/00-기초.md)** (토큰/양자화/Ollama/MLX 모든 용어 제로부터 설명).
 
 ---
 
@@ -66,12 +68,13 @@ korea-ai/
 ├── AUTHORS.md          저자 / 회사 정보
 ├── LICENSE             MIT
 ├── docs/
+│   ├── 00-기초.md       🕰️ 로컬 LLM이 뭔지 — 완전 기초 용어 가이드
 │   ├── 0-소개.md        🆕 맥 없는 사람도 이해하는 개념 가이드
 │   ├── 1-설명.md        모델 / 한국 소버린 AI / 하드웨어 안내
 │   ├── 2-설치.md        처음 설치 가이드
 │   ├── 3-사용법.md      일반 사용자용 사용 가이드
 │   ├── 4-유지보수.md    메모리 / 디스크 / 자동화
-│   └── en/             🌐 English mirror (0-intro, 1-overview, 2-install, 3-usage, 4-maintenance)
+│   └── en/             🌐 English mirror (00-basics, 0-intro, 1-overview, 2-install, 3-usage, 4-maintenance)
 ├── launcher.sh          통합 메뉴 (대화형, 슬래시 명령)
 ├── install.sh           자동 설치 (멱등 — 이미 깔린 건 skip)
 ├── web-install.sh       한 줄 웹 설치 (curl 용)
@@ -106,6 +109,7 @@ cd ~/DEV/llmDev/korea-ai
 
 | 누구 | 어디부터 | 내용 |
 |---|---|---|
+| **🕰️ 완전 기초부터 (로컬 LLM이 뭐지?)** | [docs/00-기초.md](docs/00-기초.md) | LLM/토큰/양자화/Ollama/MLX 개념을 0부터 |
 | **🆕 처음 보는 사람 / 맥 없는 분** | [docs/0-소개.md](docs/0-소개.md) | 이게 뭔지, 왜 만들었는지, 소버린 AI 개념 |
 | **처음 사용자** | [docs/1-설명.md](docs/1-설명.md) | 한국 소버린 AI가 뭔지, 어느 모델 골라야 하는지 |
 | **셋업할 사람** | [docs/2-설치.md](docs/2-설치.md) | install.sh 사용법, 수동 설치, 트러블슈팅 |
