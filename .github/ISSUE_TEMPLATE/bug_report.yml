@@ -1,0 +1,53 @@
+name: 🐛 버그 리포트 / Bug report
+description: 동작 안 하는 문제를 알려주세요 / Report something that doesn't work
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        감사합니다! 처음이신 분은 [CONTRIBUTING.md](https://github.com/GoGoComputer/korea-sovereign-ai/blob/main/CONTRIBUTING.md) 를 먼저 보세요.
+        Thanks! If this is your first time, please read [CONTRIBUTING.en.md](https://github.com/GoGoComputer/korea-sovereign-ai/blob/main/CONTRIBUTING.en.md) first.
+
+  - type: input
+    id: env
+    attributes:
+      label: 환경 / Environment
+      description: Mac 모델·macOS 버전·설치 방법 / Mac model, macOS version, install method
+      placeholder: "예) Mac M5 Pro 24GB · macOS 14.5 · web-install.sh"
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: 재현 단계 / Steps to reproduce
+      placeholder: |
+        1. ./launcher.sh /solar
+        2. "안녕" 입력
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대 동작 / Expected behavior
+      placeholder: 응답이 나옴 / I expected a response
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 실제 동작 / Actual behavior
+      placeholder: out of memory 에러 후 종료
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 로그 / 스크린샷 (Logs / Screenshots)
+      description: 터미널 출력을 붙여넣거나 이미지를 드래그하세요 / Paste terminal output or drag images
+      render: shell

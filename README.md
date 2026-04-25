@@ -66,7 +66,12 @@ korea-ai/
 ├── README.md           ← 지금 이 파일 (한국어)
 ├── README.en.md        English README
 ├── AUTHORS.md          저자 / 회사 정보
+├── CONTRIBUTING.md     🤝 기여 가이드 (비개발자도 OK)
+├── CONTRIBUTING.en.md  English contributing guide
 ├── LICENSE             MIT
+├── .github/            PR / 이슈 템플릿
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   └── ISSUE_TEMPLATE/  (버그 / 기능 / 질문)
 ├── docs/
 │   ├── 00-기초.md       🕰️ 로컬 LLM이 뭔지 — 완전 기초 용어 가이드
 │   ├── 0-소개.md        🆕 맥 없는 사람도 이해하는 개념 가이드
@@ -154,4 +159,18 @@ cd ~/DEV/llmDev/korea-ai
 
 ## 🤝 기여
 
-이슈·PR 환영합니다 → <https://github.com/GoGoComputer/korea-sovereign-ai/issues>
+**코드 못 짜도 기여할 수 있어요!** 단계별 가이드는 다음을 보세요:
+
+| 난이도 | 잘 하는 일 | 문서 |
+|---|---|---|
+| 🟢 오타/문구 수정, 사용 후기 | 이슈만 남겨도 OK | [CONTRIBUTING.md](CONTRIBUTING.md) · 방법 ① |
+| 🟢 웹에서 바로 문서 수정 | git 설치 불필요, 버튼 몇 번으로 PR | [CONTRIBUTING.md](CONTRIBUTING.md) · 방법 ② |
+| 🟡 모델/기능 추가 (PR) | 포크 → 브랜치 → PR | [CONTRIBUTING.md](CONTRIBUTING.md) · 6단계 워크플로우 |
+
+**링크**
+- 📖 [기여 가이드 (CONTRIBUTING.md)](CONTRIBUTING.md) — 비개발자용 3가지 방법 + PR 작성법
+- 📝 [PR 템플릿](.github/PULL_REQUEST_TEMPLATE.md) — PR 만들면 자동 적용
+- 🐛 [이슈 올리기](https://github.com/GoGoComputer/korea-sovereign-ai/issues/new/choose) — 버그 / 기능 제안 / 질문 템플릿
+- 💬 [Discussions](https://github.com/GoGoComputer/korea-sovereign-ai/discussions)
+
+> 처음 이슈 한 줄, 오타 수정 한 줄도 훌륭한 기여입니다. 다끍없이 시작하세요. 🇩🇰

@@ -66,7 +66,12 @@ korea-ai/
 ├── README.md           Korean README
 ├── README.en.md        ← this file (English)
 ├── AUTHORS.md          Authors / company info
+├── CONTRIBUTING.md     🤝 Contributing guide (Korean)
+├── CONTRIBUTING.en.md  🤝 Contributing guide (English, beginner-friendly)
 ├── LICENSE             MIT
+├── .github/            PR / Issue templates
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   └── ISSUE_TEMPLATE/  (bug / feature / question)
 ├── docs/               (documentation — Korean originals + English mirror)
 │   ├── 00-기초.md / en/00-basics.md   🕰️ Absolute basics (what's a local LLM)
 │   ├── 0-소개.md / en/0-intro.md
@@ -155,4 +160,18 @@ Model weights follow the licenses of their respective publishers (LG / SKT / Ups
 
 ## 🤝 Contributing
 
-Issues and PRs welcome → <https://github.com/GoGoComputer/korea-sovereign-ai/issues>
+**You can contribute even with zero coding skills!** Step-by-step guides:
+
+| Difficulty | What you do | Doc |
+|---|---|---|
+| 🟢 Typo / wording fix, usage report | Just open an issue | [CONTRIBUTING.en.md](CONTRIBUTING.en.md) · Method ① |
+| 🟢 Edit docs in the browser | No git needed; PR auto-created | [CONTRIBUTING.en.md](CONTRIBUTING.en.md) · Method ② |
+| 🟡 Add a model / feature (PR) | Fork → branch → PR | [CONTRIBUTING.en.md](CONTRIBUTING.en.md) · 6-step workflow |
+
+**Links**
+- 📖 [Contributing Guide (CONTRIBUTING.en.md)](CONTRIBUTING.en.md) — 3 non-developer paths + PR walkthrough
+- 📝 [PR template](.github/PULL_REQUEST_TEMPLATE.md) — auto-filled when you open a PR
+- 🐛 [Open an issue](https://github.com/GoGoComputer/korea-sovereign-ai/issues/new/choose) — bug / feature / question templates
+- 💬 [Discussions](https://github.com/GoGoComputer/korea-sovereign-ai/discussions)
+
+> A first issue, a one-line typo fix — those are great contributions. Don't hesitate to start. 🇩🇰

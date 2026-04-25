@@ -1,0 +1,33 @@
+name: 💡 기능 제안 / Feature request
+description: "이런 기능이 있었으면 좋겠어요 / Suggest an idea"
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        제안 감사합니다! / Thanks for the suggestion!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 어떤 불편이 있나요? / What's the pain point?
+      placeholder: 예) 모델 전환할 때마다 메뉴를 다시 띄워야 해서 번거롭다
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 어떻게 해결하면 좋을까요? / Proposed solution
+      placeholder: 예) launcher.sh 메뉴에서 /switch 명령으로 한 줄에 전환
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 대안 / Alternatives considered (선택)
+      placeholder: 예) 단축 명령(bin/) 추가도 고려해 봤지만 ...
+    validations:
+      required: false

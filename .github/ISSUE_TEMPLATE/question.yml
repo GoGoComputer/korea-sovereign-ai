@@ -1,0 +1,25 @@
+name: ❓ 질문 / Question
+description: 사용 중 궁금한 점 / Ask a usage question
+title: "[Q] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        먼저 문서를 확인해 보세요 / Please skim the docs first:
+        - 한국어: [docs/3-사용법.md](https://github.com/GoGoComputer/korea-sovereign-ai/blob/main/docs/3-사용법.md), [docs/00-기초.md](https://github.com/GoGoComputer/korea-sovereign-ai/blob/main/docs/00-기초.md)
+        - English: [docs/en/3-usage.md](https://github.com/GoGoComputer/korea-sovereign-ai/blob/main/docs/en/3-usage.md), [docs/en/00-basics.md](https://github.com/GoGoComputer/korea-sovereign-ai/blob/main/docs/en/00-basics.md)
+
+  - type: textarea
+    id: question
+    attributes:
+      label: 질문 / Question
+      placeholder: 자유롭게 한국어 또는 영어로
+    validations:
+      required: true
+
+  - type: input
+    id: env
+    attributes:
+      label: 환경 (선택) / Environment (optional)
+      placeholder: "예) Mac M3 Pro 18GB"
