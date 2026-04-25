@@ -14,6 +14,8 @@ EXAONE_OLLAMA="hf.co/LGAI-EXAONE/EXAONE-4.0-1.2B-GGUF:Q4_K_M"
 EXAONE_MLX="$HOME/models/exaone-4.0-1.2b-4bit-mlx"
 AX_MLX="$HOME/models/ax-4.0-light-4bit-mlx"
 SOLAR_OLLAMA="solar-pro"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+MLX_CHAT="$SCRIPT_DIR/bin/mlx-chat"
 
 # ─── 메모리 정리 ──────────────────────────────────────────────────────────────
 unload_all_ollama() {
@@ -46,9 +48,7 @@ run_exaone_ollama() {
 
 run_exaone_mlx() {
   unload_all_ollama
-  echo "▶ EXAONE 4.0 1.2B (MLX 4bit) — ~0.7GB, 가장 빠름"
-  echo "  종료: Ctrl+D"
-  python3 -m mlx_lm chat --model "$EXAONE_MLX" --max-tokens 1024 || true
+  python3 "$MLX_CHAT" "$EXAONE_MLX" "EXAONE 4.0 1.2B (MLX 4bit, 282 tok/s)" 1024 || true
   echo "✓ EXAONE(MLX) 프로세스 종료 → 메모리 반환"
 }
 
@@ -58,9 +58,7 @@ run_ax_mlx() {
     echo "❌ A.X MLX 모델 없음: $AX_MLX" >&2
     return 1
   fi
-  echo "▶ SKT A.X 4.0 Light (MLX 4bit) — ~4.5GB, 한국어 최강"
-  echo "  종료: Ctrl+D"
-  python3 -m mlx_lm chat --model "$AX_MLX" --max-tokens 1024 || true
+  python3 "$MLX_CHAT" "$AX_MLX" "SKT A.X 4.0 Light (MLX 4bit, 한국어 강세)" 1024 || true
   echo "✓ A.X(MLX) 프로세스 종료 → 메모리 반환"
 }
 
