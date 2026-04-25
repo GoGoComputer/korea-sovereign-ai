@@ -36,6 +36,47 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
+# ─── 업데이트 체크 (하루 1회, 비차단) ────────────────────────────────────────
+# 결과: 전역 변수 UPDATE_AVAILABLE=1 / "" 로 세팅
+UPDATE_STAMP="$HOME/.korea-ai-update-check"
+UPDATE_AVAILABLE=""
+check_update_quiet() {
+  [[ -d "$SCRIPT_DIR/.git" ]] || return 0
+  command -v git >/dev/null 2>&1 || return 0
+  # 24시간 캐시
+  if [[ -f "$UPDATE_STAMP" ]]; then
+    local age=$(( $(date +%s) - $(stat -f %m "$UPDATE_STAMP" 2>/dev/null || echo 0) ))
+    [[ $age -lt 86400 ]] && {
+      [[ "$(cat "$UPDATE_STAMP" 2>/dev/null)" == "yes" ]] && UPDATE_AVAILABLE=1
+      return 0
+    }
+  fi
+  # 백그라운드 fetch (3초 타임아웃)
+  local branch
+  branch=$(git -C "$SCRIPT_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || echo main)
+  if ( cd "$SCRIPT_DIR" && timeout 3 git fetch --quiet origin "$branch" 2>/dev/null ); then
+    local local_h remote_h
+    local_h=$(git -C "$SCRIPT_DIR" rev-parse HEAD 2>/dev/null)
+    remote_h=$(git -C "$SCRIPT_DIR" rev-parse "origin/$branch" 2>/dev/null)
+    if [[ -n "$local_h" && -n "$remote_h" && "$local_h" != "$remote_h" ]]; then
+      echo "yes" > "$UPDATE_STAMP"
+      UPDATE_AVAILABLE=1
+    else
+      echo "no" > "$UPDATE_STAMP"
+    fi
+  fi
+}
+
+run_update() {
+  if [[ -x "$SCRIPT_DIR/bin/ai-update" ]]; then
+    "$SCRIPT_DIR/bin/ai-update"
+  else
+    echo "⚠ ai-update 가 없습니다. 수동으로:"
+    echo "    cd $SCRIPT_DIR && git pull"
+  fi
+  rm -f "$UPDATE_STAMP"  # 다음에 다시 체크
+}
+
 # ─── 실행기 ───────────────────────────────────────────────────────────────────
 run_exaone_ollama() {
   unload_all_ollama
@@ -164,11 +205,15 @@ show_ps() {
 
 # ─── 메뉴 (루프) ──────────────────────────────────────────────────────────────
 menu() {
+  check_update_quiet
   while true; do
     echo
     echo "==============================="
     echo " 🇰🇷 Korean Sovereign AI Launcher"
     echo "==============================="
+    if [[ -n "$UPDATE_AVAILABLE" ]]; then
+      echo " 🆕 새 버전이 있습니다 → /update 입력"
+    fi
     # 현재 메모리 상태
     local cur
     cur=$(ollama ps 2>/dev/null | awk 'NR>1 {print $1}' | paste -sd, -)
@@ -183,6 +228,7 @@ menu() {
     echo " /solar       Solar Pro 22B (Ollama)      ~13GB"
     echo " /unload      메모리 강제 정리"
     echo " /ps          현재 로드 모델 보기"
+    echo " /update      최신 버전으로 업데이트"
     echo " /help        도움말"
     echo " /quit        종료"
     echo "-------------------------------"
@@ -198,6 +244,7 @@ menu() {
       4|solar)               run_solar ;;
       u|unload)              unload_all_ollama; echo "✓ 정리 완료" ;;
       ps|status)             show_ps ;;
+      update|upgrade)        run_update; UPDATE_AVAILABLE="" ;;
       h|help|"?")            show_help ;;
       q|quit|exit|bye)       exit 0 ;;
       "")                    : ;;  # 그냥 엔터 → 무시
@@ -217,6 +264,7 @@ case "$arg" in
   solar)          run_solar ;;
   unload)         unload_all_ollama ;;
   ps|status)      show_ps ;;
+  update|upgrade) run_update ;;
   help|-h|--help) show_help ;;
   quit|exit)      exit 0 ;;
   menu|"")        menu ;;

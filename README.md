@@ -26,6 +26,35 @@
 > 🆕 **처음 보는 분 / 맥북 없는 분**도 → **[docs/0-소개.md](docs/0-소개.md)** 부터 읽어보세요.
 > "한국 소버린 AI가 뭔지", "왜 만들었는지" 부터 친절하게 설명합니다.
 
+---
+
+## ⚡ 1분 설치 (비개발자용)
+
+> **터미널 앱**(`Cmd + Space` → "터미널" 검색)을 열고 아래 한 줄을 복사·붙여넣기 → Enter.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/GoGoComputer/korea-sovereign-ai/main/web-install.sh | bash
+```
+
+설치 후 사용:
+
+```bash
+ai-status        # 잘 설치됐는지 확인
+ax "안녕하세요"   # 한 번 질문해보기
+~/korea-ai/launcher.sh   # 메뉴 (또는 그냥: korea-ai-menu — 새 터미널에서)
+```
+
+나중에 새 버전이 나오면:
+
+```bash
+ai-update        # 한 줄로 최신 버전 업데이트 (런처 메뉴에도 자동 알림)
+```
+
+> 💡 **Solar(13GB)도 같이 설치**하려면 → `KOREA_AI_MODE=full curl -fsSL https://raw.githubusercontent.com/GoGoComputer/korea-sovereign-ai/main/web-install.sh | bash`
+
+---
+
+
 ## 📂 구성
 
 ```

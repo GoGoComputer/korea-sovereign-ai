@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+#  ai-update — korea-ai 한 줄 업데이트
+# ─────────────────────────────────────────────────────────────────────────────
+#  Usage:
+#    ai-update              # 최신 코드로 업데이트 + 변경사항 보여줌
+#    ai-update --check      # 업데이트 있는지 확인만 (다운로드 X)
+#    ai-update --reinstall  # 업데이트 후 install.sh --yes --minimal 도 실행
+# ─────────────────────────────────────────────────────────────────────────────
+set -u
+
+CHECK=0
+REINSTALL=0
+for arg in "$@"; do
+  case "$arg" in
+    --check)     CHECK=1 ;;
+    --reinstall) REINSTALL=1 ;;
+    -h|--help)   sed -n '2,11p' "$0"; exit 0 ;;
+  esac
+done
+
+# 자기 자신 위치 → 레포 루트
+HERE="$(cd "$(dirname "$0")" && pwd)"
+REPO="$(cd "$HERE/.." && pwd)"
+
+ok()   { printf "\033[32m✓\033[0m %s\n" "$*"; }
+warn() { printf "\033[33m⚠\033[0m %s\n" "$*"; }
+err()  { printf "\033[31m✗\033[0m %s\n" "$*" >&2; }
+
+if [[ ! -d "$REPO/.git" ]]; then
+  err "$REPO 가 git 저장소가 아닙니다."
+  echo "  → 한 줄 재설치:"
+  echo "    curl -fsSL https://raw.githubusercontent.com/GoGoComputer/korea-sovereign-ai/main/web-install.sh | bash"
+  exit 1
+fi
+
+if ! command -v git >/dev/null 2>&1; then
+  err "git 이 필요합니다. Xcode CLT 설치:  xcode-select --install"
+  exit 1
+fi
+
+cd "$REPO"
+BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo main)"
+echo "📦 저장소: $REPO  (브랜치: $BRANCH)"
+
+# 변경사항 있는지 경고
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  warn "로컬 변경사항이 있습니다. 그대로 두면 업데이트가 거부될 수 있어요."
+  git status --short | head -10
+  echo
+fi
+
+echo "🔍 새 버전 확인 중..."
+if ! git fetch --quiet origin "$BRANCH"; then
+  err "git fetch 실패 — 네트워크 확인"
+  exit 1
+fi
+
+LOCAL=$(git rev-parse HEAD)
+REMOTE=$(git rev-parse "origin/$BRANCH")
+
+if [[ "$LOCAL" == "$REMOTE" ]]; then
+  ok "이미 최신 버전입니다 ($(git log -1 --format='%h %s' HEAD))"
+  exit 0
+fi
+
+# 변경 미리보기
+echo
+echo "📝 새 변경사항:"
+git --no-pager log --oneline "$LOCAL".."$REMOTE" | head -20 | sed 's/^/   /'
+echo
+
+if [[ "$CHECK" -eq 1 ]]; then
+  echo "(--check) 업데이트하려면:  ai-update"
+  exit 0
+fi
+
+echo "⬇️  업데이트 진행..."
+if git pull --ff-only --quiet origin "$BRANCH"; then
+  ok "업데이트 완료 → $(git log -1 --format='%h %s' HEAD)"
+else
+  err "git pull 실패 (로컬 변경사항 충돌일 수 있음)"
+  echo "  강제 재설치:  curl -fsSL https://raw.githubusercontent.com/GoGoComputer/korea-sovereign-ai/main/web-install.sh | bash"
+  exit 1
+fi
+
+# 실행권한 다시
+chmod +x "$REPO"/*.sh "$REPO"/bin/* 2>/dev/null || true
+
+if [[ "$REINSTALL" -eq 1 ]]; then
+  echo
+  echo "▶ install.sh --yes --minimal 재실행..."
+  bash "$REPO/install.sh" --yes --minimal
+fi
+
+echo
+echo "💡 팁: 새 단축명령이 추가됐을 수 있어요 →  source ~/.zshrc"
