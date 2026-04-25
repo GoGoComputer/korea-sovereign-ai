@@ -2,6 +2,8 @@
 
 # 👥 Authors & Affiliation
 
+**🌐 Language**: **한국어 (현재)** · [English](AUTHORS.en.md)
+
 <div align="center">
 
 ### 🇰🇷 korea-sovereign-ai

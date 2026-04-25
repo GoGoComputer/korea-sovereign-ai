@@ -65,12 +65,12 @@ korea-ai/
 ├── README.en.md        ← this file (English)
 ├── AUTHORS.md          Authors / company info
 ├── LICENSE             MIT
-├── docs/               (Korean documentation)
-│   ├── 0-소개.md        🆕 Concept guide for people without a Mac
-│   ├── 1-설명.md        Models / Korean Sovereign AI / hardware
-│   ├── 2-설치.md        First-time install guide
-│   ├── 3-사용법.md      End-user usage guide
-│   └── 4-유지보수.md    Memory / disk / automation
+├── docs/               (documentation — Korean originals + English mirror)
+│   ├── 0-소개.md / en/0-intro.md
+│   ├── 1-설명.md / en/1-overview.md
+│   ├── 2-설치.md / en/2-install.md
+│   ├── 3-사용법.md / en/3-usage.md
+│   └── 4-유지보수.md / en/4-maintenance.md
 ├── launcher.sh          Unified menu (interactive, slash commands)
 ├── install.sh           Auto-installer (idempotent — skips what's installed)
 ├── web-install.sh       One-line web installer (used by curl)
@@ -103,15 +103,15 @@ Already installed:
 
 ## 📖 Documentation Guide
 
-> Note: detailed docs are currently Korean-only. See [docs/0-소개.md](docs/0-소개.md) for the most beginner-friendly entry point.
-
 | Audience | Start here | Contents |
 |---|---|---|
-| **🆕 Newcomers / no Mac** | [docs/0-소개.md](docs/0-소개.md) | What this is, why we built it, sovereign AI concept |
-| **First-time users** | [docs/1-설명.md](docs/1-설명.md) | What Korean Sovereign AI is, which model to pick |
-| **Installers** | [docs/2-설치.md](docs/2-설치.md) | `install.sh` usage, manual install, troubleshooting |
-| **End users** | [docs/3-사용법.md](docs/3-사용법.md) | Menu / slash commands / FAQ / cheat sheet |
-| **Operators** | [docs/4-유지보수.md](docs/4-유지보수.md) | Memory management, cron automation, disk cleanup |
+| **🆕 Newcomers / no Mac** | [docs/en/0-intro.md](docs/en/0-intro.md) | What this is, why we built it, sovereign AI concept |
+| **First-time users** | [docs/en/1-overview.md](docs/en/1-overview.md) | What Korean Sovereign AI is, which model to pick |
+| **Installers** | [docs/en/2-install.md](docs/en/2-install.md) | `install.sh` usage, manual install, troubleshooting |
+| **End users** | [docs/en/3-usage.md](docs/en/3-usage.md) | Menu / slash commands / FAQ / cheat sheet |
+| **Operators** | [docs/en/4-maintenance.md](docs/en/4-maintenance.md) | Memory management, cron automation, disk cleanup |
+
+> Korean originals are in [`docs/`](docs/).
 
 ## ⚙️ Environment
 

@@ -70,7 +70,8 @@ korea-ai/
 │   ├── 1-설명.md        모델 / 한국 소버린 AI / 하드웨어 안내
 │   ├── 2-설치.md        처음 설치 가이드
 │   ├── 3-사용법.md      일반 사용자용 사용 가이드
-│   └── 4-유지보수.md    메모리 / 디스크 / 자동화
+│   ├── 4-유지보수.md    메모리 / 디스크 / 자동화
+│   └── en/             🌐 English mirror (0-intro, 1-overview, 2-install, 3-usage, 4-maintenance)
 ├── launcher.sh          통합 메뉴 (대화형, 슬래시 명령)
 ├── install.sh           자동 설치 (멱등 — 이미 깔린 건 skip)
 ├── web-install.sh       한 줄 웹 설치 (curl 용)
